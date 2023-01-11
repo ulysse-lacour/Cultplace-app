@@ -20,7 +20,7 @@
 
 # NOTION
 
-https://www.notion.so/cultplace-app-6435bfef7a344cdd810fd6fb9e7d3346
+https://www.notion.so/cultplace-app-0b57d24ad2424260b45ec586fa2f1ea8
 
 # Setup environment
 
