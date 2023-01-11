@@ -1,0 +1,31 @@
+<!-- templates/new_service.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+<script src="{{ url_for('static',filename='js/add_service.js') }}"></script>
+<div class="column is-4 is-offset-4">
+    <h3 class="title">AJOUTER UN SERVICE</h3>
+    <div class="box">
+        <div id="warning_area" class="notification is-danger" hidden>
+        </div>
+        <form id="async-form">
+            <div class="field">
+                <h1 for="date_to_search">Le ...</h1>
+                <br>
+                <div class="control has-icons-left">
+                    <input id="date_to_search" class="input is-large datepicker" type="date" name="date_to_search">
+                    <span class="icon is-left">
+                        <i class="fas fa-calendar"></i>
+                    </span>
+                </div>
+            </div>
+            <br>
+            <button class="button login is-large" id="submit_button"><i class="fas fa-plus"></i></button>
+        </form>
+        <div id="success_area" class="notification is-success" hidden>
+            <div>Service ajouté :</div>
+        </div>
+    </div>
+</div>
+{% endblock %}

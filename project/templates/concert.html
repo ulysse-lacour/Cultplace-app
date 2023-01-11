@@ -1,0 +1,38 @@
+<!-- templates/json_tools.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="column is-4 is-offset-4">
+    <h3 class="title">Concert :</h3>
+    <div class="box json-box">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="notification is-danger">
+                {{ messages[0] }}
+            </div>
+        {% endif %}
+        {% endwith %}
+            <a href="{{ url_for('main.handle_services') }}">
+                <i id="go_back" class="fas fa-chevron-left fa-2x"></i>
+            </a>
+            <div>
+                <h1 class="json-title">{{concert['company']}}</h1>
+            </div>
+            <div>
+                <h1 class="json-title">{{concert['title']}}</h1>
+            </div>
+            <div>
+                <img class="event_image" src="{{ concert['picture'] }}"
+                alt="Event image">
+            </div>
+            <div class="infos">{{concert['style']}}</div>
+            {% if concert['free'] %}
+            <div class="infos">GRATUIT</div>
+            {% else %}
+            <div class="infos">PAYANT</div>
+            {% endif %}
+            <div><a href="{{concert['facebook']}}" class="infos_link">{{concert['facebook']}}</a></div>
+    </div>
+</div>
+{% endblock %}

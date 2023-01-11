@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{% block title %} SERVICES : {% endblock %}</h1>
+    <table class="services_table">
+        <thead>
+            <tr>  
+            <th>ID</th>
+            <th>Lieu</th>
+            <th>Date</th>
+            <th>Concert</th>  
+            <th>CA</th>
+            <th>Solides</th>
+            <th>Liquides</th>
+            <th>Majoration</th>
+            <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for service in services.items %}
+            <tr id="{{ service.id }}">
+                <td>{{ service.id }}</td>
+                <td>{{ service.company }}</td>
+                <td>{{ service.date.strftime('%d-%m-%Y') }}</td>
+                {% if service.concert == 'Sans concert'%}
+                <td>/</td>
+                {% else %}
+                <td style="width: 20%;"><a href="{{ url_for('main.concert_view', service_id=service.id) }}" class="concert_name">{{ service.concert }}</a></td>
+                {% endif %}
+                <td>{{ service.CA }} €</td>
+                <td>{{ service.solid }} €</td>
+                <td>{{ service.liquid }} €</td>
+                <td>{{ service.majoration }} €</td>
+                <td>
+                        <form action="/service/{{service.id}}/json" method="GET" class="crud_button">
+                            <button class="button is-success is-light  crud_button"><i class="fas fa-info-circle"></i></button>
+                        </form>
+                        <!-- <form action="/service/{{service.id}}/graph" method="GET" class="crud_button">
+                            <button class="button is-info is-light  crud_button"><i class="fas fa-chart-line"></i></button>
+                        </form> -->
+                        <form action="/service/{{service.id}}" method="GET" class="crud_button">
+                            <button class="button is-warning is-light  crud_button"><i class="fas fa-tools"></i></button>
+                        </form>
+                        <script>
+                            $(document).ready(function(){
+                                $("#delete_{{ service.id }}").click(function(e) {
+                                    e.preventDefault();
+                                    $.ajax({
+                                    type: "DELETE",
+                                    url: "/service/{{ service.id }}",
+                                    beforeSend:function(){
+                                        return confirm("Supprimer ?");
+                                    },
+                                    success: function() {
+                                        $("#{{ service.id }}").remove();
+                                    },
+                                    error: function(result) {
+                                        alert('error');
+                                    }
+                                    });
+                                });
+                            });
+                        </script>
+                        <button id="delete_{{ service.id }}" class="button is-danger is-light crud_button delete_button"><i class="fas fa-trash-alt"></i></button>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table> 
+
+    <nav aria-label="Pagination">
+        <ul class="pagination">
+            {% if services.has_prev %}
+              <li class="page-item"> <a class="page-link" href="{{ url_for('main.handle_services', page=services.prev_num) }}">&lt;</a></li>
+            {% else %}
+              <li class="page-item"><a class="page-link btn disabled" href="#">&lt;</a></li>
+            {% endif %}
+
+            {% for page in services.iter_pages(left_edge=3, left_current=3, right_current=3, right_edge=3) %}
+            {% if page %}
+
+            {% if page==services.page %}
+            <li class="page-item active"><a class="page-link active" href="{{ url_for('main.handle_services', page=page) }}">{{ page }}</a></li>
+            {% else %}
+            <li class="page-item"><a class="page-link" href="{{ url_for('main.handle_services', page=page) }}">{{ page }}</a></li>
+            {% endif %}
+
+            {% else %}
+            <li class="page-item disabled"><a href="#" class="page-link" id="example_ellipsis">…</a></li> 
+            {% endif %}
+            {% endfor %}
+
+            {% if services.has_next %}
+              <li class="page-item"> <a class="page-link" href="{{ url_for('main.handle_services', page=services.next_num) }}">&gt;</a></li>
+            {% else %}
+              <li class="page-item"><a class="page-link btn disabled" href="#">&gt;</a></li>
+            {% endif %}
+
+        </ul>
+    </nav>
+
+{% endblock %}

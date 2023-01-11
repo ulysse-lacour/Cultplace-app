@@ -1,0 +1,120 @@
+<!-- templates/base.html -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <title>Cultplace APP</title>
+    <!-- BOOTSTRAP -->
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> -->
+    <!-- BULMA -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <!-- MY CSS -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/style.css') }}">
+    <!-- GOOGLE FONT -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;900&display=swap" rel="stylesheet">
+    <!-- FONTAWESOME -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/v4-shims.css">
+    <!-- JQUERY -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.navbar-burger').click(function () {
+                $('#navbarMenuHeroA, .navbar-burger').toggleClass('is-active');
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <section class="hero is-fullheight">
+
+        <div class="hero-head">
+            <div class="navbar">
+                <div class="container">
+                    <div class="navbar-brand">
+                        <a class="navbar-item" href="{{ url_for('main.index') }}">
+                            <img id="cultplace_image"
+                                src="https://cultplace.fr/wp-content/uploads/2017/05/cropped-CultPlace_logo_noir_web_sansBaseline-270x270.png">
+                            <span class="header-title">CULTPLACE.app</span>
+                        </a>
+                    </div>
+
+                    <span class="navbar-burger burger" data-target="navbarMenuHeroA">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </span>
+
+                    <div id="navbarMenuHeroA" class="navbar-menu">
+                        <div class="navbar-end">
+                            <a href="{{ url_for('main.index') }}" id="navbar-item" class="navbar-item" title="Accueil">
+                                <i class="fas fa-home"></i>
+                            </a>
+                            {% if current_user.is_authenticated %}
+                            <a href="{{ url_for('main.profile') }}" id="navbar-item" class="navbar-item" title="Profil">
+                                <i class="fas fa-user"></i>
+                            </a>
+                            {% endif %}
+                            {% if current_user.is_authenticated %}
+                            <a href="{{ url_for('main.manually_add_service_page') }}" id="navbar-item" class="navbar-item"
+                                title="Ajouter services">
+                                <i class="fas fa-plus"></i>
+                            </a>
+                            {% endif %}
+                            {% if current_user.is_authenticated %}
+                            <a href="{{ url_for('main.add_menu') }}" id="navbar-item" class="navbar-item"
+                                title="Menu">
+                                <i class="fas fa-book-open"></i>
+                            </a>
+                            {% endif %}
+                            {% if current_user.is_authenticated %}
+                            <a href="{{ url_for('main.handle_services') }}" id="navbar-item" class="navbar-item"
+                                title="Liste des services">
+                                <i class="fas fa-utensils"></i>
+                            </a>
+                            {% endif %}
+                            {% if not current_user.is_authenticated %}
+                            <a href="{{ url_for('auth.login') }}" id="navbar-item" class="navbar-item" title="Login">
+                                Login
+                            </a>
+                            <a href="{{ url_for('auth.signup') }}" id="navbar-item" class="navbar-item" title="Sign Up">
+                                Sign Up
+                            </a>
+                            {% endif %}
+                            {% if current_user.super_user %}
+                            <a href="{{ url_for('main.admin') }}" id="navbar-item-admin" class="navbar-item"
+                                title="Admin">
+                                <i class="fas fa-jedi"></i>
+                            </a>
+                            {% endif %}
+                            {% if current_user.is_authenticated %}
+                            <a href="{{ url_for('auth.logout') }}" id="navbar-item-logout" class="navbar-item"
+                                title="Logout">
+                                <i class="fas fa-power-off"></i>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-body">
+            <div class="container has-text-centered">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+    </section>
+
+</body>
+
+</html>

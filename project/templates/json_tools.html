@@ -1,0 +1,122 @@
+<!-- templates/json_tools.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="column is-4 is-offset-4">
+    <h3 class="title">Search data</h3>
+    <h1>{% block title %}  {{service['title_date']}} {% endblock %}</h1>
+    <div class="box json-box">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="notification is-danger">
+                {{ messages[0] }}
+            </div>
+        {% endif %}
+        {% endwith %}
+        <script type=text/javascript>
+            var service = {{ service|tojson }};
+            $(document).ready(function(){
+                $("button").click(function(e) {
+                    e.preventDefault();
+                    var wich_json = $(this).attr('name')
+                    var products_to_search = $("#select_product").children("option:selected").val()
+                    var input_date_start = $('#input_date_start').val()
+                    var input_date_end = $('#input_date_end').val()
+                    $.ajax({
+                    type: "POST",
+                    url: `/service/${service['service_id']}/json`,
+                    data: JSON.stringify({ "products_to_search": products_to_search, "input_date_start": input_date_start, "input_date_end": input_date_end, "wich_json": wich_json}),
+                    contentType: "application/json; charset=utf-8",
+                    traditional: true,
+                    success: function(data, status){
+                    $(`#result_${wich_json}`).text(data)
+                    },
+                    error: function(result) {
+                        alert('error');
+                    }
+                    });
+                });
+            });
+        </script>
+            <a href="{{ url_for('main.handle_services') }}"> 
+                <i id="go_back" class="fas fa-chevron-left fa-2x"></i>
+            </a>
+            <div class="modal_template">
+                <a  class = "button modal-button top" data-target = "#modal"><i class="fas fa-trophy"></i></a> 
+
+                <div id = "modal" class = "modal">
+                    <div class = "modal-background"></div>
+                    <div class = "modal-content">
+                        <img class="graph_image"
+                        src="{{ service['graph_url'] }}"
+                        alt="Graph for CA & Top 5 liquids">
+                    </div>
+                    <a class = "modal-close is-large" aria-label="close"></a>
+                </div>
+
+                <script>
+                    $(".modal-button").click(function() {
+                    var target = $(this).data("target");
+                    $("html").addClass("is-clipped");
+                    $(target).addClass("is-active");
+                    });
+                    
+                    $(".modal-close").click(function() {
+                    $("html").removeClass("is-clipped");
+                    $(this).parent().removeClass("is-active");
+                    });
+                </script>
+            </div>
+            <div>
+                <h1 class="json-title">Par heure :</h1>
+            </div>
+            <div>
+                <label for="input_date_start">À partir de :</label>
+            </div>
+            <div>
+                <input class="select-company select datepicker" type="datetime-local" id="input_date_start"
+                    name="input_date_start" value="{{service['date']}}T12:00"
+                    min="{{service['date']}}}T00:00" max="{{service['date']}}}T00:00">
+            </div>
+            <div>
+                <label for="input_date_end">Jusqu'à :</label>
+            </div>
+            <div>
+                <input class="select-company select datepicker" type="datetime-local" id="input_date_end"
+                    name="input_date_end" value="{{service['date']}}T12:00"
+                    min="{{service['date']}}}T00:00" max="{{service['date']}}}T00:00">
+            </div>
+            <div> 
+                <button id="json_button" class="button submit" name="timeline">SEARCH</button>
+            </div>  
+            <div>
+                <div id="result_timeline" class="result"></div>
+            </div>
+
+        <br>
+        <div> 
+            <h1 class="json-title">Par produit :</h1>  
+            <div class="control has-icons-left">
+                <div class="select">
+                    <select id="select_product" class="select-company" name="select_product">
+                    <option selected value="">Choose a product</option>
+                    {% for product in products_to_search %}
+                    <option value="{{product}}">{{product}}</option>
+                    {% endfor %}
+                    </select>
+                    <span class="icon is-left">
+                        <i class="fa-solid fa-euro-sign"></i>
+                    </span>
+                </div>
+            </div>
+            <div> 
+                <button id="json_button" class="button submit" name="product">SEARCH</button>
+            </div>   
+            <div>
+                <div id="result_product" class="result"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

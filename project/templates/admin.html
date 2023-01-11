@@ -1,0 +1,33 @@
+<!-- templates/admin.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card-image has-text-centered">
+  <figure class="image is-128x128 is-inline-block">
+      <img class="is-rounded" src="{{ url_for('static', filename='Batman.jpg') }}"/>
+  </figure>
+</div>
+
+<br>
+
+<h1 class="title">
+  "A great power comes with a great responsibility"&nbsp; - &nbsp;Renaud Barillet
+</h1>
+
+<br>
+
+<h1 class="mini-title">
+  Bienvenue,&nbsp; {{ user.name }} &nbsp;!
+</h1>
+
+<br>
+
+<h2 class="subtitle">
+  Lieux&nbsp;:&nbsp; {{ user.company }}
+</h2>
+
+<h2 class="subtitle">
+  Email&nbsp;:&nbsp; {{ user.email }}
+</h2>
+{% endblock %}

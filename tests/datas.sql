@@ -1,0 +1,2 @@
+-- Here you can write raw sql to insert into db directly before testing
+-- Please use the top-lever conftest.py to have access to the ORM (SQLALchemy)

@@ -1,0 +1,32 @@
+<!-- templates/profile.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class="column is-4 is-offset-4">
+  <div class="notification is-danger">
+      {{ messages[0] }}
+  </div>
+</div>
+<br>
+{% endif %}
+{% endwith %}
+
+
+<h1 class="title">
+  Bienvenue,&nbsp; {{ user.name }} &nbsp;!
+</h1>
+
+<br>
+
+<h2 class="subtitle">
+  Lieux&nbsp;:&nbsp; {{ user.company }}
+</h2>
+
+<h2 class="subtitle">
+  Email&nbsp;:&nbsp; {{ user.email }}
+</h2>
+{% endblock %}

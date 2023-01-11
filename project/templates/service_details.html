@@ -1,0 +1,199 @@
+<!-- templates/service_details.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="column is-4 is-offset-4">
+    <div class="box json-box">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="notification is-danger">
+                {{ messages[0] }}
+            </div>
+        {% endif %}
+        {% endwith %}
+        <a href="{{ url_for('main.handle_services') }}"> 
+            <i id="go_back" class="fas fa-chevron-left fa-2x"></i>
+        </a>
+        <div class="cadre">
+            <br>
+            <h1 class="cadre-title">{{ service["date"] }} :</h1>
+
+            <div class="modal_template">
+                <button  class = "button modal-button top" data-target = "#modal"><i class="fas fa-trophy"></i></button> 
+
+                <div id = "modal" class = "modal">
+                    <div class = "modal-background"></div>
+                    <div class = "modal-content">
+                        <img class="graph_image"
+                        src="{{ service['graph_url'] }}"
+                        alt="Graph for CA & Top 5 liquids">
+                    </div>
+                    <button class = "modal-close is-large" aria-label="close"></button>
+                </div>
+
+                <script>
+                    $(".modal-button").click(function() {
+                    var target = $(this).data("target");
+                    $("html").addClass("is-clipped");
+                    $(target).addClass("is-active");
+                    });
+                    
+                    $(".modal-close").click(function() {
+                    $("html").removeClass("is-clipped");
+                    $(this).parent().removeClass("is-active");
+                    });
+                </script>
+            </div>
+
+            <div class="display_service_infos">
+                <div>
+                    <label>CA :</label>
+                    <span id="CA">{{ service["CA"] }}</span>
+                    <span>€</span>
+                </div>
+
+                <div>
+                    <label>Solides :</label>
+                    <span id="solid">{{ service["solid"] }}</span>
+                    <span>€</span>
+                </div>
+
+                <div>
+                    <label>Liquides :</label>
+                    <span id="liquid">{{ service["liquid"] }}</span>
+                    <span>€</span>
+                </div>
+
+                <div>
+                    <label>Majoration :</label>
+                    <span id="majoration">{{ service["majoration"] }}</span>
+                    <span>€</span>
+                </div>
+            </div>
+            <script>
+                $(document).ready(function(){
+                    var input_concert = document.getElementById("control_concert");
+                    var input_free = document.getElementById("control_free");
+                    $('#show_update').click(function() {
+                        $('#update_form').toggle()
+                    });
+                    $('#show_concert_update').click(function() {
+                        $('#update_concert_form').toggle()
+                    });
+                    $('#select_info').change(function() {
+                        input_value = $('#' + $(this).val()).text();
+                        $('#input_field').val(input_value);
+                    });
+                    $('#select_concert_info').change(function() {
+                        if ($(this).val() == "no_info") {
+                            input_concert.style.display = "none";
+                            input_free.style.display = "none";
+                        }
+                        else if ($(this).val() == "free") {
+                            input_concert.style.display = "none";
+                            input_free.style.display = "block";
+                            input_concert_value = $('#' + $(this).val()).text();
+                        }
+                        else {
+                            input_free.style.display = "none";
+                            if (input_concert.style.display === "none") {input_concert.style.display = "block";}
+                            if ($(this).val() == "facebook") {input_concert_value = $('#' + $(this).val()).attr('href');}
+                            else {input_concert_value = $('#' + $(this).val()).text();}
+                            $('#input_field_concert').val(input_concert_value);
+                        }
+                    });
+                });
+            </script>
+            <button id="show_update" class="button update is-medium">Modifier</button>
+            <form id="update_form" method="POST" action="/service/{{service['id']}}" style="display: none;">
+                <div class="field">
+                    <div class="control has-icons-left">
+                        <div class="select">
+                            <select id="select_info" name="select_info">
+                            <option selected value="no_info">Select info to update</option>
+                            <option value="CA">CA</option>
+                            <option value="solid">Solides</option>
+                            <option value="liquid">Liquides</option>
+                            <option value="majoration">Majoration</option>
+                            </select>
+                            <span class="icon is-left">
+                                <i class="fas fa-euro-sign"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="control has-icons-left">
+                        <input id="input_field" class="input" type="number" step=0.01 min=0 name="select_value" value="">
+                        <span class="icon is-left">
+                            <i class="fas fa-euro-sign"></i>
+                        </span>
+                    </div>
+                </div>
+                <button class="button update is-small">UPDATE</button>
+            </form>
+            {% if service['title'] != "Sans concert" %}
+            <div class="concert_infos">
+                <div>
+                    <h1 class="json-title h1">Concert :</h1>
+                </div>
+
+                <div>
+                    <h2 id="title" class="concert-title">{{service['title']}}</h2>
+                </div>
+
+                <div id="style" class="infos">{{service['style']}}</div>
+
+                {% if service['free'] %}
+                <div id="free" class="infos">GRATUIT</div>
+                {% else %}
+                <div id="free" class="infos">PAYANT</div>
+                {% endif %}
+
+                {% if service['facebook'] != '#' %}
+                <div><a id="facebook" href="{{service['facebook']}}" class="infos_icon_link"><i class="fab fa-facebook-square"></i></a></div>
+                {% endif %}
+            </div>
+            {% else %}
+            <div>
+                <h1 class="json-title h1">{{ service['title'] }}</h1>
+            </div>
+            {% endif %}
+            <button id="show_concert_update" class="button update is-medium">Modifier</button>
+            <form id="update_concert_form" method="POST" action="/service/{{service['id']}}" style="display: none;">
+                <div class="field">
+                    <div class="control has-icons-left">
+                        <div class="select">
+                            <select id="select_concert_info" name="select_concert_info">
+                            <option selected value="no_info">Select info to update</option>
+                            <option value="title">Titre</option>
+                            <option value="style">Genre</option>
+                            <option value="free">Gratuit ?</option>
+                            <option value="facebook">Facebook</option>
+                            </select>
+                            <span class="icon is-left">
+                                <i class="fas fa-euro-sign"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div id="control_concert" class="control has-icons-left" style="display: none;">
+                        <input id="input_field_concert" class="input" type="text" name="select_concert_value" value="">
+                        <span class="icon is-left">
+                            <i class="fas fa-euro-sign"></i>
+                        </span>
+                    </div>
+                    <div id="control_free" class="control" style="display: none;">
+                        {% if service['free'] %}
+                        <input id="input_field_free" type="checkbox" name="select_is_free" checked>
+                        {% else %}
+                        <input id="input_field_free" type="checkbox" name="select_is_free">
+                        {% endif %}
+                        <label for="input_field_free">Gratuit ?</label>
+                    </div>
+                </div>
+                <button class="button update is-small">UPDATE</button>
+            </form>
+            
+        </div>
+    </div>
+</div>
+{% endblock %}

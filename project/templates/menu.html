@@ -1,0 +1,77 @@
+<!-- templates/new_services.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .is-success {
+        max-height: 12em;
+        overflow: scroll;
+    }
+
+    .notification.is-update {
+        background-color: #1b8cbc;
+    }
+
+    .notification.is-pending {
+        background-color: #bc9e1b;
+    }
+</style>
+<script type=text/javascript>
+    $(document).ready(function(){
+        $("button").click(function(e) {
+            $("button").addClass("is-loading")
+        });
+    });
+</script>
+<div class="column is-4 is-offset-4">
+    <h3 class="title">METTRE À JOUR LE MENU</h3>
+    <div class="box">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="notification is-danger">
+            {{ messages[0] }}
+        </div>
+        {% endif %}
+        {% endwith %}
+        <form method="POST" action="/add_menu">
+            <button class="button login is-large"><i class="fas fa-plus"></i></button>
+        </form>
+
+        {% if products_added is none %}
+        <div class="notification is-success is-pending">
+            <div>
+                <strong>Veuillez demander une mise à jour</strong>
+            </div>
+        </div>
+        {% elif products_added|length < 1 %} <div class="notification is-success">
+            <div>
+                <strong>
+                    Aucun produit ajouté : MENU À JOUR
+                </strong>
+            </div>
+    </div>
+    {% else %}
+    <div class="notification is-success">
+        <div><strong>Produits ajoutés : </strong></div>
+        {% for product in products_added %}
+        <div>
+            <p>{{ product.product_name }} - id: {{ product.uniq_id_product }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% if products_updated %}
+    <div class="notification is-success is-update">
+        <div><strong>Produits mis à jour : </strong></div>
+        {% for product in products_updated %}
+        <div>
+            <p>{{ product.product_name }} - id: {{ product.uniq_id_product }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+</div>
+</div>
+{% endblock %}

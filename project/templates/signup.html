@@ -1,0 +1,63 @@
+<!-- templates/signup.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="column is-4 is-offset-4">
+    <h3 class="title">Sign Up</h3>
+    <div class="box">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="notification is-danger">
+                {{ messages[0] }}. Go to <a href="{{ url_for('auth.login') }}">login page</a>.
+            </div>
+        {% endif %}
+        {% endwith %}
+        <form method="POST" action="/signup">
+            <div class="field">
+                <div class="control has-icons-left">
+                    <input class="input is-large" type="email" name="email" placeholder="Email" autofocus="">
+                    <span class="icon is-left">
+                        <i class="fas fa-envelope"></i>
+                    </span>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control has-icons-left">
+                    <div class="select is-large">
+                      <select class="select-company" name="company">
+                        <option selected value="">Entreprise</option>
+                        <option value="La Petite Halle">La Petite Halle</option>
+                        <option value="autre">Autre</option>
+                      </select>
+                      <span class="icon is-left">
+                        <i class="fas fa-utensils"></i>
+                      </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control has-icons-left">
+                    <input class="input is-large" type="text" name="name" placeholder="  Nom" autofocus="">
+                    <span class="icon is-left">
+                        <i class="fas fa-user-ninja"></i>
+                    </span>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control has-icons-left">
+                    <input class="input is-large" type="password" name="password" placeholder="Mot de passe">
+                    <span class="icon is-left">
+                        <i class="fas fa-key"></i>
+                    </span>
+                </div>
+            </div>
+
+            <button class="button inscription is-large">Inscription</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
